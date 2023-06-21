@@ -1,0 +1,29 @@
+{
+  "name": "jdungeon-website",
+  "version": "1.0.0",
+  "description": "The official jdungeon website",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/jdungeon/jdungeon-website.git"
+  },
+  "keywords": [
+    "html",
+    "css",
+    "js"
+  ],
+  "author": "Jonathan Eeckhout",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://gitlab.com/jdungeon/jdungeon-website/issues"
+  },
+  "homepage": "https://gitlab.com/jdungeon/jdungeon-website#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.3",
+    "pg": "^8.11.0"
+  }
+}

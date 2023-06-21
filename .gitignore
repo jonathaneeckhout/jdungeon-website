@@ -1,0 +1,21 @@
+# Ignore node_modules directory
+node_modules/
+
+helpers/run.sh
+
+# Ignore log files
+*.log
+
+# Ignore environment-specific configuration files
+.env
+
+# Ignore build output directory
+dist/
+
+# Ignore editor-specific files
+.vscode/
+.idea/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db

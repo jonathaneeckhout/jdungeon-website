@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>JDungeon</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('background.png');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container bg-dark text-light">
+        <div class="container mt-5">
+            <h1>JDungeon</h1>
+            <div class="mb-4"></div> <!-- Blank line -->
+            <h2>Description</h2>
+            <p>JDungeon is an open-source MMORPG set in a medieval fantasy world. Players can create unique characters,
+                choose from different classes, and embark on quests in a vast and immersive game world. With its
+                open-source
+                nature, JDungeon encourages community collaboration and offers an engaging experience for players who
+                enjoy
+                medieval settings.</p>
+        </div>
+
+        <div class="container mt-5">
+            <h2>Create new account</h2>
+            <form id="registrationForm">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+        <div class="mb-4"></div> <!-- Blank line -->
+
+        <div class="container mt-5">
+            <h2>How to play</h2>
+            <p>Source code can be found <a href="https://gitlab.com/jdungeon/jdungeon" target="_blank">here on our
+                    gitlab
+                    page</a></p>
+        </div>
+
+
+        <footer class="bg-dark text-light py-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2023 JDungeon. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        // Handle form submission
+        document.getElementById('registrationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            var form = e.target;
+            var formData = new FormData(form);
+
+            var data = {};
+            for (var [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            // Make AJAX request to register the user
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        form.reset();
+                        alert('Verification mail successfully sent, please check your mailbox');
+                    } else {
+                        alert('Error registering user');
+                    }
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    alert('Error registering user');
+                });
+        });
+    </script>
+</body>
+
+</html>
