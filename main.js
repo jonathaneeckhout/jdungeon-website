@@ -13,13 +13,13 @@ const oneHour = 60 * 60 * 1000; // One hour in milliseconds
 const verificationInformationMaxStorageDuration = oneDay;
 
 const DB_HOST = process.env.POSTGRES_HOST;
-const DB_PORT = process.env.POSTGRES_PORT;
+const DB_PORT = parseInt(process.env.POSTGRES_PORT, 10);
 const DB_USER = process.env.POSTGRES_USER;
 const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
 const DB_DB = process.env.POSTGRES_DB;
 
 const MAIL_HOST = process.env.MAIL_HOST;
-const MAIL_PORT = process.env.MAIL_PORT;
+const MAIL_PORT = parseInt(process.env.MAIL_PORT, 10);
 const MAIL_USER = process.env.MAIL_USER;
 const MAIL_KEY = process.env.MAIL_KEY;
 
