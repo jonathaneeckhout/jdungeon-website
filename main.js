@@ -24,7 +24,6 @@ const MAIL_USER = process.env.MAIL_USER;
 const MAIL_KEY = process.env.MAIL_KEY;
 
 const GREENLOCK_EMAIL = process.env.GREENLOCK_EMAIL;
-const GREENLOCK_DOMAIN = process.env.GREENLOCK_DOMAIN;
 
 const pool = new Pool({
     user: DB_USER,
@@ -33,18 +32,6 @@ const pool = new Pool({
     password: DB_PASSWORD,
     port: DB_PORT,
 });
-
-
-const greenlockConfig = {
-    email: GREENLOCK_EMAIL, // Your email address for Let's Encrypt notifications
-    agreeTos: true, // Agree to the Let's Encrypt terms of service
-    app: app,
-    // Add your domain(s) here
-    approvedDomains: [GREENLOCK_DOMAIN],
-    communityMember: false,
-    production: true,
-  };
-  
 
 const createTableQuery = `
   CREATE TABLE IF NOT EXISTS players (
@@ -216,4 +203,15 @@ function hashPassword(password) {
 }
 
 // Start the server
-greenlock.init(greenlockConfig).serve(app);
+greenlock.init({
+    packageRoot: __dirname,
+    configDir: "./greenlock.d",
+
+    // contact for security and critical bug notices
+    maintainerEmail: GREENLOCK_EMAIL,
+
+    // whether or not to run at cloudscale
+    cluster: false
+})
+// Serves on 80 and 443
+.serve(app);
