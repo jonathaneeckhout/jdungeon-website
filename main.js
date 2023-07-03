@@ -3,24 +3,48 @@ const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const { Pool } = require('pg');
 const crypto = require('crypto');
+require('dotenv').config();
+const greenlock = require('greenlock-express');
 
 const app = express();
-const port = 3000;
 
 const oneDay = 24 * 60 * 60 * 1000; // One day in milliseconds
 const oneHour = 60 * 60 * 1000; // One hour in milliseconds
 const verificationInformationMaxStorageDuration = oneDay;
 
-const { MAIL_USER, MAIL_KEY, DB_USER, DB_HOST, DB_PASSWORD } = process.env;
+const DB_HOST = process.env.POSTGRES_HOST;
+const DB_PORT = process.env.POSTGRES_PORT;
+const DB_USER = process.env.POSTGRES_USER;
+const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
+const DB_DB = process.env.POSTGRES_DB;
+
+const MAIL_HOST = process.env.MAIL_HOST;
+const MAIL_PORT = process.env.MAIL_PORT;
+const MAIL_USER = process.env.MAIL_USER;
+const MAIL_KEY = process.env.MAIL_KEY;
+
+const GREENLOCK_EMAIL = process.env.GREENLOCK_EMAIL;
+const GREENLOCK_DOMAIN = process.env.GREENLOCK_DOMAIN;
 
 const pool = new Pool({
     user: DB_USER,
     host: DB_HOST,
-    database: 'jdungeon',
+    database: DB_DB,
     password: DB_PASSWORD,
-    port: 5432, // default PostgreSQL port
+    port: DB_PORT,
 });
 
+
+const greenlockConfig = {
+    email: GREENLOCK_EMAIL, // Your email address for Let's Encrypt notifications
+    agreeTos: true, // Agree to the Let's Encrypt terms of service
+    app: app,
+    // Add your domain(s) here
+    approvedDomains: [GREENLOCK_DOMAIN],
+    communityMember: false,
+    production: true,
+  };
+  
 
 const createTableQuery = `
   CREATE TABLE IF NOT EXISTS players (
@@ -83,8 +107,8 @@ app.post('/register', (req, res) => {
 
 
                 const transporter = nodemailer.createTransport({
-                    host: 'mail.privateemail.com',
-                    port: 465,
+                    host: MAIL_HOST,
+                    port: MAIL_PORT,
                     secure: true,
                     auth: {
                         user: MAIL_USER,
@@ -192,6 +216,4 @@ function hashPassword(password) {
 }
 
 // Start the server
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
+greenlock.init(greenlockConfig).serve(app);
