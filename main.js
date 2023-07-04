@@ -53,8 +53,8 @@ pool.query(createTableQuery, (err, result) => {
 });
 
 const httpsOptions = {
-    key: fs.readFileSync(CERT_PATH),
-    cert: fs.readFileSync(KEY_PATH)
+    key: fs.readFileSync(KEY_PATH),
+    cert: fs.readFileSync(CERT_PATH)
 };
 
 // Parse JSON bodies
