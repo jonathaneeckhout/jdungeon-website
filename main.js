@@ -86,7 +86,7 @@ app.post('/register', (req, res) => {
                 // Save the verification information for later
                 saveVerificationInformation(username, email, hashedPassword, verificationCode);
                 // Create a verification link
-                const verificationLink = `https://www.jdungeon.org/verify?email=${encodeURIComponent(email)}&code=${verificationCode}`;
+                const verificationLink = `https://jdungeon.org/verify?email=${encodeURIComponent(email)}&code=${verificationCode}`;
 
                 // Send the verification email
                 const subject = 'JDungeon Account Verification';
