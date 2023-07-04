@@ -4,7 +4,6 @@ const nodemailer = require('nodemailer');
 const { Pool } = require('pg');
 const crypto = require('crypto');
 require('dotenv').config();
-const greenlock = require('greenlock-express');
 
 const app = express();
 
@@ -23,7 +22,8 @@ const MAIL_PORT = parseInt(process.env.MAIL_PORT, 10);
 const MAIL_USER = process.env.MAIL_USER;
 const MAIL_KEY = process.env.MAIL_KEY;
 
-const GREENLOCK_EMAIL = process.env.GREENLOCK_EMAIL;
+const CERT_PATH = process.env.CERT_PATH;
+const KEY_PATH = process.env.KEY_PATH;
 
 const pool = new Pool({
     user: DB_USER,
@@ -49,6 +49,11 @@ pool.query(createTableQuery, (err, result) => {
         console.log('Table created successfully');
     }
 });
+
+const httpsOptions = {
+    key: fs.readFileSync(CERT_PATH),
+    cert: fs.readFileSync(KEY_PATH)
+};
 
 // Parse JSON bodies
 app.use(bodyParser.json());
@@ -202,16 +207,6 @@ function hashPassword(password) {
     return hashedPassword;
 }
 
-// Start the server
-greenlock.init({
-    packageRoot: __dirname,
-    configDir: "./greenlock.d",
-
-    // contact for security and critical bug notices
-    maintainerEmail: GREENLOCK_EMAIL,
-
-    // whether or not to run at cloudscale
-    cluster: false
-})
-// Serves on 80 and 443
-.serve(app);
+const httpsServer = https.createServer(httpsOptions, app).listen(443, () => {
+    console.log('HTTPS server running on port 443');
+});

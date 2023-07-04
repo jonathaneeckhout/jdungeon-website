@@ -7,11 +7,8 @@ services:
     image: jdungeon-website
     container_name: jdungeon-website
     restart: always
-#    ports:
-#      - 80:80
-#      - 443:443
     environment:
       - NODE_ENV=production
     volumes:
-      - ./:/app
+      - /etc/letsencrypt/live:/etc/letsencrypt/live
     network_mode: "host"
