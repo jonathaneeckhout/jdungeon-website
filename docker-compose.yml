@@ -10,5 +10,6 @@ services:
     environment:
       - NODE_ENV=production
     volumes:
-      - /etc/letsencrypt/live:/etc/letsencrypt/live
+      - /etc/letsencrypt/live/jdungeon.org/fullchain.pem:/etc/letsencrypt/live/jdungeon.org/fullchain.pem
+      - /etc/letsencrypt/live/jdungeon.org/privkey.pem:/etc/letsencrypt/live/jdungeon.org/privkey.pem
     network_mode: "host"
