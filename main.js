@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const { Pool } = require('pg');
 const crypto = require('crypto');
 require('dotenv').config();
+const fs = require('fs');
 
 const app = express();
 
