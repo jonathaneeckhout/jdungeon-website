@@ -1,11 +1,13 @@
 FROM node:14
 
-WORKDIR /app
+ENV HOME=/home/app
 
-COPY package.json .
+COPY package.json package-lock.json $HOME/node_docker/
 
-RUN npm install --quiet
+WORKDIR $HOME/node_docker
 
-COPY . .
+RUN npm install --silent --progress=false
 
-CMD [ "node", "main.js" ]
+COPY . $HOME/node_docker
+
+CMD ["node", "main.js"]
