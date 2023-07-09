@@ -93,7 +93,7 @@ app.post('/register', (req, res) => {
                 // Save the verification information for later
                 saveVerificationInformation(username, email, hashedPassword, verificationCode);
                 // Create a verification link
-                const verificationLink = `https://jdungeon.org/verify?email=${encodeURIComponent(email)}&code=${verificationCode}`;
+                const verificationLink = `https://jdungeon.org/verify.html?email=${encodeURIComponent(email)}&code=${verificationCode}`;
 
                 // Send the verification email
                 const subject = 'JDungeon Account Verification';
@@ -132,10 +132,10 @@ app.post('/register', (req, res) => {
 });
 
 // Handle GET request to verify the user
-app.get('/verify', (req, res) => {
+app.post('/verify', (req, res) => {
     // Retrieve the email and verification code from the query parameters
-    const email = req.query.email;
-    const verificationCode = req.query.code;
+    const email = req.body.email;
+    const verificationCode = req.body.code;
 
     // Retrieve the saved verification code from the database or in-memory store
     const data = getVerificationCode(email);
