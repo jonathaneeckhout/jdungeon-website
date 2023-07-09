@@ -13,6 +13,7 @@ jobs:
         with:
           name: jonathaneeckhout/jdungeon-client
           ref: v0.0.2
+          token: ${{ github.token }}
           lfs: true
       - name: Setup
         run: |
@@ -46,6 +47,7 @@ jobs:
         with:
           name: jonathaneeckhout/jdungeon-client
           ref: v0.0.2
+          token: ${{ github.token }}
           lfs: true
       - name: Setup
         run: |
