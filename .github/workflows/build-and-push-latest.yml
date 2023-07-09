@@ -3,7 +3,7 @@ on: [push]
 
 env:
   GODOT_VERSION: "4.1"
-  EXPORT_NAME: Jdungeon-level-server
+  EXPORT_NAME: Jdungeon-client
   PROJECT_PATH: ./
 
 jobs:
