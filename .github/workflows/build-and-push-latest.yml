@@ -1,6 +1,11 @@
 name: build and push the latest docker image
 on: [push]
 
+env:
+  GODOT_VERSION: "4.1"
+  EXPORT_NAME: Jdungeon-level-server
+  PROJECT_PATH: ./
+
 jobs:
   build-client-linux:
     name: Client Linux Export
