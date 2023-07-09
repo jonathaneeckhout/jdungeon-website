@@ -2,12 +2,89 @@ name: build and push the latest docker image
 on: [push]
 
 jobs:
+  build-client-linux:
+    name: Client Linux Export
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          name: jonathaneeckhout/jdungeon-client
+          ref: v0.0.2
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Linux Build
+        run: |
+          mkdir -v -p build/linux
+          cd $PROJECT_PATH
+          godot -v --headless --export-release "Linux/X11" build/linux/$EXPORT_NAME.x86_64
+      - name: Add config
+        run: |
+          touch build/linux/.env
+          echo "DEBUG=false" >> build/linux/.env
+          echo "COMMON_SERVER_ADDRESS=${{ vars.COMMON_SERVER_ADDRESS }}" >> build/linux/.env
+          echo "COMMON_SERVER_HOST=${{ vars.COMMON_SERVER_HOST }}" >> build/linux/.env
+          echo "COMMON_SERVER_PORT=${{ vars.COMMON_SERVER_PORT }}" >> build/linux/.env
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: jdungeon-client-linux
+          path: build/linux
+  build-client-windows:
+    name: Client Windows Export
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          name: jonathaneeckhout/jdungeon-client
+          ref: v0.0.2
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Windows Build
+        run: |
+          mkdir -v -p build/windows
+          cd $PROJECT_PATH
+          godot -v --headless --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
+      - name: Add config
+        run: |
+          touch build/windows/.env
+          echo "DEBUG=false" >> build/windows/.env
+          echo "COMMON_SERVER_ADDRESS=${{ vars.COMMON_SERVER_ADDRESS }}" >> build/windows/.env
+          echo "COMMON_SERVER_HOST=${{ vars.COMMON_SERVER_HOST }}" >> build/windows/.env
+          echo "COMMON_SERVER_PORT=${{ vars.COMMON_SERVER_PORT }}" >> build/windows/.env
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: jdungeon-client-windows
+          path: build/windows
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
+    needs: [build-client-linux, build-client-windows]
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
+      - name: Download Linux artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: jdungeon-client-linux
+          path: public/images
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: jdungeon-client-windows
+          path: public/images
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
