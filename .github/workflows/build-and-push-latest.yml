@@ -92,6 +92,8 @@ jobs:
       - name: Zip linux client
         run: zip -qq -r ../jdungeon-client-linux.zip *
         working-directory: public/images/linux
+      - name: Remove the linux artifacts
+        run: rm -rf public/images/linux
       - name: Download Windows artifacts
         uses: actions/download-artifact@v3
         with:
@@ -100,6 +102,8 @@ jobs:
       - name: Zip windows client
         run: zip -qq -r ../jdungeon-client-windows.zip *
         working-directory: public/images/windows
+      - name: Remove the windows artifacts
+        run: rm -rf public/images/windows
       - name: Check out images
         run: |
           ls -al
