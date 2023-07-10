@@ -90,7 +90,7 @@ jobs:
       - name: Install zip
         uses: montudor/action-zip@v1
       - name: Zip linux client
-        run: zip -qq -r ../jdungeon-client-linux.zip *
+        run: zip -r ../jdungeon-client-linux.zip .
         working-directory: public/images/linux
       - name: Remove the linux artifacts
         run: rm -rf public/images/linux
@@ -100,7 +100,7 @@ jobs:
           name: jdungeon-client-windows
           path: public/images/windows
       - name: Zip windows client
-        run: zip -qq -r ../jdungeon-client-windows.zip *
+        run: zip -r ../jdungeon-client-windows.zip .
         working-directory: public/images/windows
       - name: Remove the windows artifacts
         run: rm -rf public/images/windows
