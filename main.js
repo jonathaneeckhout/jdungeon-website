@@ -4,7 +4,7 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const { Pool } = require('pg');
-const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const app = express();
@@ -75,7 +75,7 @@ app.post('/register', (req, res) => {
         return;
     }
 
-    pool.query('SELECT * FROM players WHERE username = $1 OR email = $2', [username, email], (err, result) => {
+    pool.query('SELECT * FROM players WHERE username = $1 OR email = $2', [username, email], async (err, result) => {
         if (err) {
             console.error('Error executing query', err);
             res.status(500).send('Failed to create account');
@@ -85,7 +85,7 @@ app.post('/register', (req, res) => {
                 res.status(500).send('Username or E-mail address is already in use');
             } else {
                 // Hash the password
-                const hashedPassword = hashPassword(password);
+                const hashedPassword = await hashPassword(password);
 
                 // Generate a verification code (you can use a library or your own logic)
                 const verificationCode = generateVerificationCode();
@@ -202,11 +202,10 @@ const verificationDepricatedCheckInterval = setInterval(() => {
     }
 }, oneHour);
 
-function hashPassword(password) {
-    const hash = crypto.createHash('sha256');
-    hash.update(password);
-    const hashedPassword = hash.digest('hex');
-    return hashedPassword;
+async function hashPassword(password) {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    return hash;
 }
 
 const httpsServer = https.createServer(httpsOptions, app).listen(443, () => {
