@@ -35,23 +35,6 @@ const pool = new Pool({
     port: DB_PORT,
 });
 
-const createTableQuery = `
-  CREATE TABLE IF NOT EXISTS players (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
-  );
-`;
-
-pool.query(createTableQuery, (err, result) => {
-    if (err) {
-        console.error('Error creating table:', err);
-    } else {
-        console.log('Table created successfully');
-    }
-});
-
 const httpsOptions = {
     key: fs.readFileSync(KEY_PATH),
     cert: fs.readFileSync(CERT_PATH)
