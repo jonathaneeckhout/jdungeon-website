@@ -27,6 +27,9 @@ const MAIL_KEY = process.env.MAIL_KEY;
 const CERT_PATH = process.env.CERT_PATH;
 const KEY_PATH = process.env.KEY_PATH;
 
+const DEBUG = process.env.DEBUG
+const DEBUG_PORT = parseInt(process.env.DEBUG_PORT, 10);
+
 const pool = new Pool({
     user: DB_USER,
     host: DB_HOST,
@@ -75,6 +78,10 @@ app.post('/register', (req, res) => {
 
                 // Save the verification information for later
                 saveVerificationInformation(username, email, hashedPassword, verificationCode);
+                if (DEBUG) {
+                    console.log(`https://localhost:8443/verify.html?email=${encodeURIComponent(email)}&code=${verificationCode}`);
+                    return
+                }
                 // Create a verification link
                 const verificationLink = `https://jdungeon.org/verify.html?email=${encodeURIComponent(email)}&code=${verificationCode}`;
 
@@ -191,6 +198,11 @@ async function hashPassword(password) {
     return hash;
 }
 
-const httpsServer = https.createServer(httpsOptions, app).listen(443, () => {
-    console.log('HTTPS server running on port 443');
+var port = 443;
+
+if (DEBUG) {
+    port = 8443;
+}
+const httpsServer = https.createServer(httpsOptions, app).listen(port, () => {
+    console.log('HTTPS server running on port ' + port);
 });
