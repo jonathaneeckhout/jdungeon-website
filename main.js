@@ -23,6 +23,27 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Serve the index.html file
 app.use(express.static('public'));
 
+// Handle GET request get the version of JDungeon
+app.get('/version', (req, res) => {
+    const versionPath = 'public/images/.version.json';
+
+    fs.readFile(versionPath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading JSON file:', err);
+            res.json({ error: true, reason: "api error" });
+            return;
+        }
+
+        try {
+            const jsonData = JSON.parse(data);
+            res.json({ error: false, version: jsonData.version });
+        } catch (parseError) {
+            console.error('Error parsing JSON data:', parseError);
+            res.json({ error: true, reason: "api error" });
+        }
+    });
+});
+
 var port = 443;
 
 if (DEBUG) {
